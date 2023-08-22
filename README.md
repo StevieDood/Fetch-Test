@@ -1,73 +1,148 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+<p  align="center">
+
+<a  href="https://fetch.com"  target="blank"><img  src="https://s3-recruiting.cdn.greenhouse.io/external_greenhouse_job_boards/logos/400/111/000/original/Fetch_PrimaryLogo.jpg?1669991665"  width="200"  alt="Fetch Logo"  /></a>
+
 </p>
 
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<p  align="center">A backend excercise made by Steve Lemus.</p>
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A backend exercise made on NestJS as a framework, and Typescript. Mounted on a Docker container.
 
 ## Installation
 
 ```bash
-$ yarn install
+
+$  docker build -t fetch_steve_test .
+
 ```
 
 ## Running the app
 
 ```bash
-# development
-$ yarn run start
 
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+$  docker run -d -p 3000:3000 fetch_steve_test
 ```
 
-## Test
+## Documentation
+
+I included a Swagger documentation to review the endpoints, check the receipt schema and test each task directly from the browser. However, it can be tested without problem from postman or any other client from the local host on port 3000. Without any further ado, the swagger can be accesed from here
 
 ```bash
-# unit tests
-$ yarn run test
 
-# e2e tests
-$ yarn run test:e2e
+# Swagger doc
 
-# test coverage
-$ yarn run test:cov
+http://localhost:3000/api/doc/
+
 ```
 
-## Support
+## **Endpoints**
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Endpoint: heartbeat
+
+- Path: `/`
+- Method: `GET`
+- Payload: None
+- Response: A simple string to check the availability of the service.
+
+This endpoint was made just to check the health of the service :) .
+
+Example Response:
+
+```bash
+"Hello world!"
+```
+
+### Endpoint: find by id
+
+- Path: `/receipts/{id}`
+- Method: `GET`
+- Payload: None
+- Param: a valid uuid
+- Response: A JSON cointaining a receipt info. This one should be persisted previously.
+
+Example Response:
+
+```bash
+{
+  "id": "2b58c7db-b1cc-4c3c-8802-e26a7b0f730a",
+  "retailer": "Starbucks",
+  "purchaseDate": "2023-08-21",
+  "purchaseTime": "14:35",
+  "total": "35.25",
+  "items": [
+    {
+      "shortDescription": "Mountain Dew 12PK",
+      "price": "6.49"
+    },
+    {
+      "shortDescription": "Emils Cheese Pizza",
+      "price": "12.25"
+    },
+    {
+      "shortDescription": "Knorr Creamy Chicken",
+      "price": "1.26"
+    },
+    {
+      "shortDescription": "Doritos Nacho Cheese",
+      "price": "3.35"
+    },
+    {
+      "shortDescription": "   Klarbrunn 12-PK 12 FL OZ  ",
+      "price": "12.00"
+    }
+  ]
+}
+```
+
+### Endpoint: Process Receipts
+
+- Path: `/receipts/process`
+- Method: `POST`
+- Payload: Receipt JSON
+- Response: JSON containing an id for the receipt.
+
+Description:
+
+Takes in a JSON receipt and returns a JSON object with an ID generated by the api.
+
+The ID returned is the ID that should be passed into `/receipts/{id}/points` to get the number of points the receipt was awarded.
+
+Reminder: Data does not need to survive an application restart.
+
+Example Response:
+
+```bash
+{ "id": "7fb1377b-b223-49d9-a31a-5a02701dd310" }
+```
+
+## Endpoint: Get Points
+
+- Path: `/receipts/{id}/points`
+- Method: `GET`
+- Param: a valid uuid
+- Response: A JSON object containing the number of points awarded.
+
+A simple Getter endpoint that looks up the receipt by the ID and returns an object specifying the points awarded.
+
+Example Response:
+
+```bash
+{ "points": 32 }
+```
+
+### Reminder
+
+The projet can also be run installing the `npm i -g @nestjs/cli`, running `yarn install` to add all the dependencias and typing `nest start --watch` to start it, but as the task stated before, I added a Dockerfile and the commands needed to sucessfully run the project.
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Steve Lemus](https://www.linkedin.com/in/steve-lemus/)
 
-## License
+- Email - [stv8904@hotmail.com](mail.to)
 
-Nest is [MIT licensed](LICENSE).
+## Thanks!
