@@ -1,7 +1,5 @@
 <p  align="center">
-
 <a  href="https://fetch.com"  target="blank"><img  src="https://s3-recruiting.cdn.greenhouse.io/external_greenhouse_job_boards/logos/400/111/000/original/Fetch_PrimaryLogo.jpg?1669991665"  width="200"  alt="Fetch Logo"  /></a>
-
 </p>
 
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
